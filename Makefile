@@ -19,3 +19,4 @@ check-format:
 .PHONY: clean
 clean:
 	rm bobcat
+
