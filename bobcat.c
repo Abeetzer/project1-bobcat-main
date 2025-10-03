@@ -46,7 +46,9 @@ int main(int argc, char *argv[]) {
   // printf("%d\n",argc);
   char buf[4096];
   size_t count = sizeof(buf);
+
   int exit_status = 0;
+
   // case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
     int res = stdin_print(buf, count);
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]) {
     if (strcmp(argv[i], "-") == 0) {
       // printf("%s", argv[i]);
       int res = stdin_print(buf, count);
-      exit_status = res;
+      if (res != 0) exit_status = 1;
       continue;
     }  // printf("yatta"); works for now
 
@@ -77,6 +79,7 @@ int main(int argc, char *argv[]) {
       if (res < 0) {
         warn("%s", argv[i]);
         exit_status = 1;
+        break;
       }
       if (res == 0) break;  // <-- when I hit crtl D
       // printf("%ld\n", res);//when does this = 0
