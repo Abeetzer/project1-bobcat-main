@@ -12,7 +12,7 @@ int stdin_print(char *buf, size_t count) {
     ssize_t res = read(0, buf, count);
 
     if (res < 0) {
-      warn("stdin");  // use warn
+      warn("-");  // use warn
       return 1;
     }
     if (res == 0) break;  // <-- when I hit crtl D
@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
   // case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
     int res = stdin_print(buf, count);
-    return res;
+    return res ? 1 : 0;
   }
-
+  //
   for (int i = 1; i < argc; i++) {  // argc is lets say 3, i = 1,2 --> 2
                                     // iterations = argc -1(files) good
     if (strcmp(argv[i], "-") == 0) {
@@ -83,12 +83,15 @@ int main(int argc, char *argv[]) {
       }
       if (res == 0) break;  // <-- when I hit crtl D
       // printf("%ld\n", res);//when does this = 0
+
       ssize_t total_written = 0;
       while (total_written < res) {
         ssize_t written = write(1, buf + total_written, res - total_written);
         if (written < 0) {
           warn("stdout");
           exit_status = 1;
+          close(fd);
+          return exit_status;
         }
         total_written += written;
       }
