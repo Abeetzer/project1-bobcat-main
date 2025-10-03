@@ -7,13 +7,13 @@
 #include <string.h>
 #include <unistd.h>
 
-void stdin_print(char *buf, size_t count) {
+int stdin_print(char *buf, size_t count) {
   while (1) {
     size_t res = read(0, buf, count);
 
     if (res < 0) {
       warn("stdin");  // use warn
-      exit(1);
+      return 1;
     }
     if (res == 0) break;  // <-- when I hit crtl D
     // printf("%ld\n", res);//when does this = 0
@@ -27,11 +27,12 @@ void stdin_print(char *buf, size_t count) {
       ssize_t written = write(1, buf + total_written, res - total_written);
       if (written < 0) {
         warn("stdout");
-        exit(1);
+        return 1;
       }
       total_written += written;
     }
   }
+  return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -48,15 +49,16 @@ int main(int argc, char *argv[]) {
   int exit_status = 0;
   // case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
-    stdin_print(buf, count);
-    return 0;
+    int res = stdin_print(buf, count);
+    return res;
   }
 
   for (int i = 1; i < argc; i++) {  // argc is lets say 3, i = 1,2 --> 2
                                     // iterations = argc -1(files) good
     if (strcmp(argv[i], "-") == 0) {
       // printf("%s", argv[i]);
-      stdin_print(buf, count);
+      int res = stdin_print(buf, count);
+      exit_status = res;
       continue;
     }  // printf("yatta"); works for now
 
@@ -74,7 +76,7 @@ int main(int argc, char *argv[]) {
 
       if (res < 0) {
         warn("%s", argv[i]);
-        exit(1);
+        exit_status = 1;
       }
       if (res == 0) break;  // <-- when I hit crtl D
       // printf("%ld\n", res);//when does this = 0
@@ -83,7 +85,7 @@ int main(int argc, char *argv[]) {
         ssize_t written = write(1, buf + total_written, res - total_written);
         if (written < 0) {
           warn("stdout");
-          exit(1);
+          exit_status = 1;
         }
         total_written += written;
       }
