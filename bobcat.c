@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
       for (size_t i = 0; i < res; ++i) {
         // printf("%c", buf[i]);
         void *p = &buf[i];
-        write(0, p, 1);
+        write(1, p, 1);
       }
     }
   }
