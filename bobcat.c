@@ -7,22 +7,22 @@
 #include <string.h>
 #include <unistd.h>
 
-void stdin_print(char *buf, size_t count){
-    while (1) {
-      size_t res = read(0, buf, count);
+void stdin_print(char *buf, size_t count) {
+  while (1) {
+    size_t res = read(0, buf, count);
 
-      if (res < 0) {
-        printf("fatal error\n");
-        exit(1);
-      }
-      if (res == 0) break;  // <-- when I hit crtl D
-      // printf("%ld\n", res);//when does this = 0
-      for (size_t i = 0; i < res; ++i) {
-        // printf("%c", buf[i]);
-        void *p = &buf[i];
-        write(1, p, 1);
-      }
+    if (res < 0) {
+      printf("fatal error\n");
+      exit(1);
     }
+    if (res == 0) break;  // <-- when I hit crtl D
+    // printf("%ld\n", res);//when does this = 0
+    for (size_t i = 0; i < res; ++i) {
+      // printf("%c", buf[i]);
+      void *p = &buf[i];
+      write(1, p, 1);
+    }
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -35,21 +35,21 @@ int main(int argc, char *argv[]) {
   // stdin to stdout pipeline
   char buf[1024];
   size_t count = sizeof(buf);
-  //printf("%d",argc); case 1 and 2 now Don't mix
+  // printf("%d",argc); case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
-        stdin_print(buf, count);
+    stdin_print(buf, count);
   }
 
   for (int i = 1; i < argc; i++) {  // argc is lets say 3, i = 1,2 --> 2
                                     // iterations = argc -1(files) good
     if (strcmp(argv[i], "-") == 0) {
-        //printf("%s", argv[i]);
-        stdin_print(buf, count);
-        continue;
+      // printf("%s", argv[i]);
+      stdin_print(buf, count);
+      continue;
     }  // printf("yatta"); works for now
-    
-    int fd = open(argv[i], O_RDONLY, 0);//file descriptor
-    
+
+    int fd = open(argv[i], O_RDONLY, 0);  // file descriptor
+
     if (fd < 0) {
       fprintf(stderr, "bobcat: %s: %s\n", argv[i], strerror(errno));
       continue;
