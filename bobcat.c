@@ -17,11 +17,21 @@ void stdin_print(char *buf, size_t count) {
     }
     if (res == 0) break;  // <-- when I hit crtl D
     // printf("%ld\n", res);//when does this = 0
-    for (size_t i = 0; i < res; ++i) {
+    //for (size_t i = 0; i < res; ++i) {
       // printf("%c", buf[i]);
-      void *p = &buf[i];
-      write(1, p, 1);
-    }
+      //void *p = &buf[i];
+      //write(1, p, 1);
+    //}
+    size_t total_written = 0;
+    while (total_written < res) {
+      ssize_t written = write(1, buf + total_written, res - total_written);
+      if (written < 0) {
+          warn("stdout");
+          exit(1);
+      }
+      total_written += written;
+  }
+
   }
 }
 
@@ -34,7 +44,7 @@ int main(int argc, char *argv[]) {
 
   // stdin to stdout pipeline
   // printf("%d\n",argc);
-  char buf[1024];
+  char buf[4096];
   size_t count = sizeof(buf);
   int exit_status = 0;
   // case 1 and 2 now Don't mix
@@ -69,10 +79,14 @@ int main(int argc, char *argv[]) {
       }
       if (res == 0) break;  // <-- when I hit crtl D
       // printf("%ld\n", res);//when does this = 0
-      for (size_t i = 0; i < res; ++i) {
-        // printf("%c", buf[i]);
-        void *p = &buf[i];
-        write(1, p, 1);
+      size_t total_written = 0;
+      while (total_written < res) {
+        ssize_t written = write(1, buf + total_written, res - total_written);
+        if (written < 0) {
+            warn("stdout");
+            exit(1);
+        }
+        total_written += written;
       }
     }
   }
