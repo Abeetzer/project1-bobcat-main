@@ -12,7 +12,7 @@ void stdin_print(char *buf, size_t count) {
     size_t res = read(0, buf, count);
 
     if (res < 0) {
-      warn("stdin");//use warn
+      warn("stdin");  // use warn
       exit(1);
     }
     if (res == 0) break;  // <-- when I hit crtl D
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     }  // printf("yatta"); works for now
 
     int fd = open(argv[i], O_RDONLY, 0);  // file descriptor
-    
+
     if (fd < 0) {
       warn("%s", argv[i]);
       exit_status = 1;
