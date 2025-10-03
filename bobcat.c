@@ -7,19 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
-//
-int main(int argc, char *argv[]) {
-  // we want to set up the basics which is taking a set of files from ./bobcat
-  // and reading it
-  //  argc and argv will allow us to do this
-  // we just need to check if the files are valid or not and whether we have
-  // permission to open them or not(this shouldn't be a problem tbh)
-
-  // stdin to stdout pipeline
-  char buf[1024];
-  size_t count = sizeof(buf);
-  if (argc == 1 || (argc > 1 && strcmp(argv[1], "-") == 0)) {
-    printf("here");
+void stdin_print(char *buf, size_t count){
     while (1) {
       size_t res = read(0, buf, count);
 
@@ -35,14 +23,33 @@ int main(int argc, char *argv[]) {
         write(1, p, 1);
       }
     }
+}
+
+int main(int argc, char *argv[]) {
+  // we want to set up the basics which is taking a set of files from ./bobcat
+  // and reading it
+  //  argc and argv will allow us to do this
+  // we just need to check if the files are valid or not and whether we have
+  // permission to open them or not(this shouldn't be a problem tbh)
+
+  // stdin to stdout pipeline
+  char buf[1024];
+  size_t count = sizeof(buf);
+  //printf("%d",argc); case 1 and 2 now Don't mix
+  if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
+        stdin_print(buf, count);
   }
 
   for (int i = 1; i < argc; i++) {  // argc is lets say 3, i = 1,2 --> 2
                                     // iterations = argc -1(files) good
     if (strcmp(argv[i], "-") == 0) {
-      continue;
+        //printf("%s", argv[i]);
+        stdin_print(buf, count);
+        continue;
     }  // printf("yatta"); works for now
-    int fd = open(argv[i], O_RDONLY, 0);
+    
+    int fd = open(argv[i], O_RDONLY, 0);//file descriptor
+    
     if (fd < 0) {
       fprintf(stderr, "bobcat: %s: %s\n", argv[i], strerror(errno));
       continue;
