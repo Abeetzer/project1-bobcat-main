@@ -9,7 +9,7 @@
 
 int stdin_print(char *buf, size_t count) {
   while (1) {
-    size_t res = read(0, buf, count);
+    ssize_t res = read(0, buf, count);
 
     if (res < 0) {
       warn("stdin");  // use warn
@@ -22,7 +22,7 @@ int stdin_print(char *buf, size_t count) {
     // void *p = &buf[i];
     // write(1, p, 1);
     //}
-    size_t total_written = 0;
+    ssize_t total_written = 0;
     while (total_written < res) {
       ssize_t written = write(1, buf + total_written, res - total_written);
       if (written < 0) {
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     // int res = read(fd,buf,count);
     // printf("%d\n",res);//works
     while (1) {
-      size_t res = read(fd, buf, count);
+      ssize_t res = read(fd, buf, count);
 
       if (res < 0) {
         warn("%s", argv[i]);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
       }
       if (res == 0) break;  // <-- when I hit crtl D
       // printf("%ld\n", res);//when does this = 0
-      size_t total_written = 0;
+      ssize_t total_written = 0;
       while (total_written < res) {
         ssize_t written = write(1, buf + total_written, res - total_written);
         if (written < 0) {
@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
         total_written += written;
       }
     }
+    close(fd);
   }
   // printf("skibidi\n");//this env works fine time to plan
   return exit_status;
