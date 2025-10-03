@@ -33,8 +33,10 @@ int main(int argc, char *argv[]) {
   // permission to open them or not(this shouldn't be a problem tbh)
 
   // stdin to stdout pipeline
+
   char buf[1024];
   size_t count = sizeof(buf);
+  int exit_status = 0;
   // printf("%d",argc); case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
     stdin_print(buf, count);
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]) {
 
     if (fd < 0) {
       fprintf(stderr, "bobcat: %s: %s\n", argv[i], strerror(errno));
+      exit_status = 1;
       continue;
     }  // works
     // int res = read(fd,buf,count);
@@ -73,5 +76,5 @@ int main(int argc, char *argv[]) {
     }
   }
   // printf("skibidi\n");//this env works fine time to plan
-  return EXIT_SUCCESS;
+  return exit_status;
 }
