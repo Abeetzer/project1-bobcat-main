@@ -33,11 +33,11 @@ int main(int argc, char *argv[]) {
   // permission to open them or not(this shouldn't be a problem tbh)
 
   // stdin to stdout pipeline
-  //printf("%d\n",argc);
+  // printf("%d\n",argc);
   char buf[1024];
   size_t count = sizeof(buf);
   int exit_status = 0;
-   //case 1 and 2 now Don't mix
+  // case 1 and 2 now Don't mix
   if (argc == 1 || (argc == 2 && strcmp(argv[1], "-") == 0)) {
     stdin_print(buf, count);
     return 0;
