@@ -12,7 +12,7 @@ void stdin_print(char *buf, size_t count) {
     size_t res = read(0, buf, count);
 
     if (res < 0) {
-      printf("fatal error\n");
+      warn("stdin");//use warn
       exit(1);
     }
     if (res == 0) break;  // <-- when I hit crtl D
@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
     }  // printf("yatta"); works for now
 
     int fd = open(argv[i], O_RDONLY, 0);  // file descriptor
-
+    
     if (fd < 0) {
-      fprintf(stderr, "bobcat: %s: %s\n", argv[i], strerror(errno));
+      warn("%s", argv[i]);
       exit_status = 1;
       continue;
     }  // works
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
       size_t res = read(fd, buf, count);
 
       if (res < 0) {
-        printf("fatal error\n");
+        warn("%s", argv[i]);
         exit(1);
       }
       if (res == 0) break;  // <-- when I hit crtl D
