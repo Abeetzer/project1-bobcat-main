@@ -17,21 +17,20 @@ void stdin_print(char *buf, size_t count) {
     }
     if (res == 0) break;  // <-- when I hit crtl D
     // printf("%ld\n", res);//when does this = 0
-    //for (size_t i = 0; i < res; ++i) {
-      // printf("%c", buf[i]);
-      //void *p = &buf[i];
-      //write(1, p, 1);
+    // for (size_t i = 0; i < res; ++i) {
+    // printf("%c", buf[i]);
+    // void *p = &buf[i];
+    // write(1, p, 1);
     //}
     size_t total_written = 0;
     while (total_written < res) {
       ssize_t written = write(1, buf + total_written, res - total_written);
       if (written < 0) {
-          warn("stdout");
-          exit(1);
+        warn("stdout");
+        exit(1);
       }
       total_written += written;
-  }
-
+    }
   }
 }
 
@@ -83,8 +82,8 @@ int main(int argc, char *argv[]) {
       while (total_written < res) {
         ssize_t written = write(1, buf + total_written, res - total_written);
         if (written < 0) {
-            warn("stdout");
-            exit(1);
+          warn("stdout");
+          exit(1);
         }
         total_written += written;
       }
